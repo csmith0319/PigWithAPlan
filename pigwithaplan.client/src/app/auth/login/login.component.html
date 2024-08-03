@@ -1,0 +1,52 @@
+<!-- login.component.html -->
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md">
+    <mat-card class="p-8">
+      <h1 class="text-2xl font-bold mb-6 text-center">Pig With A Plan</h1>
+      <h2 class="text-xl font-semibold mb-4">Login</h2>
+      <p class="mb-6">
+        Don't have an account yet?
+        <a routerLink="/register" class="text-blue-600">Sign up!</a>
+      </p>
+      <form [formGroup]="formLogin">
+        <mat-form-field appearance="outline" class="w-full mb-4">
+          <mat-label>Username or Email</mat-label>
+          <input matInput type="text" [formControl]="username" />
+          <mat-error *ngIf="username.errors?.['required']"
+            >Username is required.</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-4">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" [formControl]="password" />
+          <button mat-icon-button matSuffix tabindex="-1">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <mat-error *ngIf="password.errors?.['required']"
+            >Password is required.</mat-error
+          >
+        </mat-form-field>
+        <div class="flex items-center justify-between mb-4">
+          <mat-checkbox>Remember this account</mat-checkbox>
+          <a href="#" class="text-blue-600">Forgot password?</a>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="w-full mb-4"
+          (click)="submit()"
+        >
+          Sign In
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          class="w-full flex items-center justify-center"
+          (click)="googleLogin()"
+        >
+          <mat-icon class="mr-2">account_circle</mat-icon> Sign in with Google
+        </button>
+      </form>
+    </mat-card>
+  </div>
+</div>

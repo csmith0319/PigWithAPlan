@@ -1,0 +1,15 @@
+<mat-sidenav-container class="h-screen">
+  <mat-sidenav mode="side" opened class="w-1/4 bg-gray-200">
+    <div class="p-4">
+      <h1 class="text-xl font-bold mb-4">PWAP</h1>
+      <nav>
+        <ul>
+          <app-nav-link *ngFor="let link of links" [link]="link"></app-nav-link>
+        </ul>
+      </nav>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content class="bg-white p-4">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

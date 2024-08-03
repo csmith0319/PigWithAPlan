@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigWithAPlan.Server", "PigWithAPlan.Server\PigWithAPlan.Server.csproj", "{9A477A77-0A56-40AB-8CE2-0F1C51E1BC22}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "pigwithaplan.client", "pigwithaplan.client\pigwithaplan.client.esproj", "{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A477A77-0A56-40AB-8CE2-0F1C51E1BC22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A477A77-0A56-40AB-8CE2-0F1C51E1BC22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A477A77-0A56-40AB-8CE2-0F1C51E1BC22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A477A77-0A56-40AB-8CE2-0F1C51E1BC22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E9628DB-A680-4E1A-ADFA-40E7A0FBA070}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14DE9C22-74EA-401A-9116-27460ED83320}
+	EndGlobalSection
+EndGlobal

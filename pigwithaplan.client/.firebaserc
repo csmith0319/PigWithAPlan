@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "pwap-dev": "pwap-d2a90",
+    "pigwithaplan.client": "pwap-d2a90",
+    "dev": "pwap-d2a90"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

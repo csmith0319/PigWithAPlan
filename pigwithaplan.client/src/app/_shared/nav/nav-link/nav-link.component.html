@@ -1,0 +1,31 @@
+<li *ngIf="link">
+  <ng-container *ngIf="!link.children">
+    <a
+      mat-button
+      [routerLink]="link.path"
+      class="text-gray-700 hover:text-gray-900"
+    >
+      {{ link.label }}
+    </a>
+  </ng-container>
+  <ng-container *ngIf="link.children">
+    <ng-container *ngIf="link.path">
+      <a
+        mat-button
+        [routerLink]="link.path"
+        class="text-gray-700 hover:text-gray-900"
+      >
+        {{ link.label }}
+      </a>
+    </ng-container>
+    <ng-container *ngIf="!link.path">
+      <span mat-button class="text-gray-700">{{ link.label }}</span>
+    </ng-container>
+    <ul class="ml-4">
+      <app-nav-link
+        *ngFor="let child of link.children"
+        [link]="child"
+      ></app-nav-link>
+    </ul>
+  </ng-container>
+</li>
