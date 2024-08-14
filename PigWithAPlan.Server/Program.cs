@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PigWithAPlan.Server.Data;
-using PigWithAPlan.Server.Interfaces;
 using PigWithAPlan.Server.Repositories;
 using PigWithAPlan.Server.Services;
 

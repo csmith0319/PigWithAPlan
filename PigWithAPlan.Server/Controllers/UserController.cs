@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using PigWithAPlan.Server.Interfaces;
 using PigWithAPlan.Server.Models;
 using PigWithAPlan.Server.Services;
 
@@ -31,12 +30,20 @@ namespace PigWithAPlan.Server.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            var createdUser = await _userService.RegisterAsync(user);
+
+            if (!createdUser)
+            {
+                return BadRequest();
+            }
+
             return Ok();
         }
 

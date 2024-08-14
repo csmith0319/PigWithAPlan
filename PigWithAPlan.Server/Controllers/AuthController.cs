@@ -19,7 +19,15 @@ public class AuthController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] ILogin model)
     {
-        var token = await _authService.Login(model.Username, model.Password);
+        var _user = new User
+        {
+            Username = model.Username,
+            Email = model.Email,
+            Password = model.Password,
+            Name = model.Username
+        };
+
+        var token = await _authService.Login(_user);
         if (token != null)
         {
             Response.Cookies.Append("token", token, new CookieOptions
@@ -77,7 +85,15 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] IRegister model)
     {
-        var result = await _authService.RegisterAsync(model.Username, model.Password);
+        var _newUser = new User
+        {
+            Username = model.Username,
+            Email = model.Email,
+            Password = model.Password,
+            Name = model.Username
+        };
+
+        var result = await _authService.RegisterAsync(_newUser);
         if (result)
         {
             return Ok();

@@ -1,12 +1,11 @@
 using PigWithAPlan.Server.Dtos.User;
-using PigWithAPlan.Server.Interfaces;
 using PigWithAPlan.Server.Mappers;
 using PigWithAPlan.Server.Models;
 
 public interface IUserService
 {
-    Task<bool> RegisterAsync(string username, string password);
-    Task<bool> ValidateUser(string username, string password);
+    Task<bool> RegisterAsync(User user);
+    Task<bool> ValidateUser(User user);
     Task<List<UserDTO>> GetAllAsync();
 }
 
@@ -19,32 +18,43 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public async Task<bool> RegisterAsync(string username, string password)
+    public async Task<bool> RegisterAsync(User user)
     {
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-        var user = new User
+        if (string.IsNullOrEmpty(user.Password))
         {
-            Name = username,
-            Email = username,
-            Username = username,
+            throw new ArgumentNullException("Password");
+        }
+
+        string password = user.Password;
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+        var _newUser = new User
+        {
+            Name = user.Name,
+            Email = user.Email,
+            Username = user.Username,
             Password = hashedPassword
         };
 
-        return await _userRepository.CreateUserAsync(user);
+        return await _userRepository.CreateUserAsync(_newUser);
     }
 
-    public async Task<bool> ValidateUser(string username, string password)
+    public async Task<bool> ValidateUser(User user)
     {
-        var user = await _userRepository.GetUserByUsername(username);
+        if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+        {
+            throw new ArgumentNullException("Username/Password");
+        }
 
-        if (user == null)
+        var dbUser = await _userRepository.GetUserByUsername(user.Username);
+
+        if (dbUser == null)
         {
             return false;
         }
 
         else
         {
-            return BCrypt.Net.BCrypt.Verify(password, user.Password);
+            return BCrypt.Net.BCrypt.Verify(user.Password, dbUser.Password);
         }
     }
 

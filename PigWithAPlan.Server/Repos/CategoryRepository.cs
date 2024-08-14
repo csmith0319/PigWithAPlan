@@ -7,6 +7,15 @@ using PigWithAPlan.Server.Models;
 
 namespace PigWithAPlan.Server.Repositories
 {
+    public interface ICategoryRepository
+    {
+        Task<IEnumerable<Category>> GetAllAsync();
+        Task<Category?> GetByIdAsync(int id);
+        Task<Category> AddAsync(Category category);
+        Task<Category> UpdateAsync(Category category);
+        Task<bool> DeleteAsync(int id);
+    }
+
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
@@ -21,7 +30,7 @@ namespace PigWithAPlan.Server.Repositories
             return await _context.Categories.Include(c => c.CategoryGroup).ToListAsync();
         }
 
-        public async Task<Category> GetByIdAsync(int id)
+        public async Task<Category?> GetByIdAsync(int id)
         {
             return await _context.Categories.Include(c => c.CategoryGroup).FirstOrDefaultAsync(c => c.Id == id);
         }

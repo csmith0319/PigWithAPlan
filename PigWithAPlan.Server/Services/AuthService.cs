@@ -6,14 +6,13 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.Extensions.Configuration;
 using PigWithAPlan.Server.Data;
 using PigWithAPlan.Server.Models;
-using PigWithAPlan.Server.Interfaces;
 
 public interface IAuthService
 {
-    Task<string?> Login(string username, string password);
+    Task<string?> Login(User user);
     Task<string> GoogleLoginAsync(ClaimsPrincipal principal);
     string GenerateJwtToken(string username);
-    Task<bool> RegisterAsync(string username, string password);
+    Task<bool> RegisterAsync(User user);
     Task<(bool IsValid, string? UserId)> CheckTokenAsync(string token);
 
 }
@@ -32,12 +31,12 @@ public class AuthService : IAuthService
         _userService = userService;
     }
 
-    public async Task<string?> Login(string username, string password)
+    public async Task<string?> Login(User user)
     {
-        var isValidUser = await _userService.ValidateUser(username, password);
+        var isValidUser = await _userService.ValidateUser(user);
         if (isValidUser)
         {
-            return GenerateJwtToken(username);
+            return GenerateJwtToken(user.Username);
         }
 
         return null;
@@ -56,9 +55,9 @@ public class AuthService : IAuthService
         return await Task.FromResult(token);
     }
 
-    public async Task<bool> RegisterAsync(string username, string password)
+    public async Task<bool> RegisterAsync(User user)
     {
-        return await _userService.RegisterAsync(username, password);
+        return await _userService.RegisterAsync(user);
     }
 
     public async Task<(bool IsValid, string? UserId)> CheckTokenAsync(string token)

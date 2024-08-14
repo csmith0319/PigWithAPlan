@@ -5,6 +5,15 @@ using PigWithAPlan.Server.Repositories;
 
 namespace PigWithAPlan.Server.Services
 {
+    public interface ICategoryService
+    {
+        Task<IEnumerable<Category>> GetAllAsync();
+        Task<Category?> GetByIdAsync(int id);
+        Task<Category> AddAsync(Category category);
+        Task<Category> UpdateAsync(Category category);
+        Task<bool> DeleteAsync(int id);
+    }
+
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _repository;
@@ -19,7 +28,7 @@ namespace PigWithAPlan.Server.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Category> GetByIdAsync(int id)
+        public async Task<Category?> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
         }

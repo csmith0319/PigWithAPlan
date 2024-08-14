@@ -1,14 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using PigWithAPlan.Server.Data;
-using PigWithAPlan.Server.Interfaces;
 using PigWithAPlan.Server.Models;
+
+public interface IUserRepository
+{
+    Task<List<User>> GetAllAsync();
+    Task<bool> CreateUserAsync(User user);
+    Task<User?> GetUserByUsername(string username);
+}
 
 public class UserRepository : IUserRepository
 {
-    private readonly ApplicationDbContext _context;
 
-    public UserRepository(ApplicationDbContext context)
+
+    private readonly ApplicationDbContext _context;
+    private readonly ILogger<UserRepository> _logger;
+
+    public UserRepository(ApplicationDbContext context, ILogger<UserRepository> logger)
     {
+        _logger = logger;
         _context = context;
     }
 
@@ -32,6 +42,7 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error has occured while creating a new user.");
             return false;
         }
     }
