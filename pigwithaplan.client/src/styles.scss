@@ -1,0 +1,56 @@
+@use "@angular/material" as mat;
+@include mat.core();
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$my-primary: mat.define-palette(mat.$purple-palette, 500);
+$my-accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
+$my-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($my-theme);
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+}
+
+.material-symbols-outlined .filled {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 40;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mdc-notched-outline__notch {
+  border-right: none;
+}
+
+.overlay-active {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.overlay-active .cdk-overlay-container {
+  pointer-events: all;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background: none !important;
+  color: red;
+}

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, Subject, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { BehaviorSubject, catchError, Observable, Subject, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +12,10 @@ export class AuthService {
   private baseUrl: string = this.apiUrl + '/api/Auth';
   private apiLogin = '/Login';
   private apiRegister = '/Register';
-  private apiCheckToken = '/CheckToken';
+  private apiLogout = '/Logout';
+  private apiCheckAuthenticated = '/CheckToken';
 
-  isLoggedIn = false;
-
-  AuthSubject_Changed: Subject<boolean> = new Subject();
+  AuthSubject_Changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) {}
 
@@ -36,21 +36,25 @@ export class AuthService {
       );
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(this.baseUrl + this.apiLogin, {
-      username,
-      email,
-      password,
-    });
+  register(user: any): Observable<any> {
+    return this.http.post(this.baseUrl + this.apiRegister, user);
   }
 
-  checkToken(): Observable<any> {
-    return this.http.get(this.baseUrl + this.apiCheckToken, {
+  logout(): Observable<any> {
+    return this.http.post(this.baseUrl + this.apiLogout, null).pipe(
+      tap(() => {
+        this.AuthSubject_Changed.next(false);
+      })
+    );
+  }
+
+  isAuthenticated(): Observable<any> {
+    return this.http.get(this.baseUrl + this.apiCheckAuthenticated, {
       withCredentials: true,
     });
   }
 
-  googleLogin(token: string): Observable<any> {
+  loginGoogle(token: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/Auth/GoogleLogin`, { token });
   }
 }

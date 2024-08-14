@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>New Budget</h2>
+<mat-dialog-content>
+  <form [formGroup]="formBudget" class="flex flex-col">
+    <mat-form-field appearance="fill">
+      <mat-label>Budget Name</mat-label>
+      <input matInput [formControl]="name" cdkFocusInitial />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <input matInput [formControl]="description" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Budget Color</mat-label>
+      <mat-select [formControl]="color">
+        <mat-option *ngFor="let color of colors" [value]="color.value">
+          <span [style.color]="color.value">{{ color.name }}</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="secondary" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="submit()">Create</button>
+</mat-dialog-actions>

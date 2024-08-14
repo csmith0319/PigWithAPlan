@@ -62,6 +62,23 @@ namespace PigWithAPlan.Server.Controllers
             return Ok(updatedBudget);
         }
 
+        [HttpPost("Favorite")]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            try
+            {
+                if (id == 0) return NotFound();
+
+                var success = await _budgetService.FavoriteBudget(id);
+
+                return Ok(success);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteBudget(int id)
         {

@@ -1,19 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../../_services/auth.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastService } from '../../_shared/toast/toast.service';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   private subscription = new Subscription();
@@ -30,11 +32,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(this.username.value, this.password.value).subscribe({
       next: (response) => {
         if (response.token) {
+          this.toastService.showSuccess('Login success');
           this.router.navigate(['/budgets']);
         }
       },
       error: (error) => {
         console.error('Login failed', error);
+        this.toastService.showError('Login failed');
       },
     });
   }

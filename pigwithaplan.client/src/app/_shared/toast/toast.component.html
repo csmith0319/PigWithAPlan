@@ -1,0 +1,12 @@
+<div class="flex justify-between items-center p-4 rounded">
+  <span class="toast-message" matSnackBarLabel>{{ data.message }}</span>
+  <span matSnackBarActions>
+    <button
+      mat-icon-button
+      matSnackBarAction
+      (click)="snackBarRef.dismissWithAction()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </span>
+</div>

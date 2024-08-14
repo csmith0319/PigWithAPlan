@@ -18,6 +18,9 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
                      .IsRequired()
                      .HasMaxLength(50);
 
+              builder.Property(b => b.Favorite)
+                     .HasDefaultValue(false);
+
               builder.HasOne(b => b.User)
                      .WithMany()
                      .HasForeignKey(b => b.UserId);

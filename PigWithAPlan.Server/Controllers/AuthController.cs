@@ -85,4 +85,16 @@ public class AuthController : ControllerBase
 
         return BadRequest();
     }
+
+    [HttpPost("Logout")]
+    public IActionResult Logout()
+    {
+        if (Request.Cookies.ContainsKey("token"))
+        {
+            Response.Cookies.Delete("token");
+        }
+
+        return Ok();
+    }
+
 }

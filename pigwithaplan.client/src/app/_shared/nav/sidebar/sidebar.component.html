@@ -1,15 +1,32 @@
-<mat-sidenav-container class="h-screen">
-  <mat-sidenav mode="side" opened class="w-1/4 bg-gray-200">
-    <div class="p-4">
-      <h1 class="text-xl font-bold mb-4">PWAP</h1>
-      <nav>
-        <ul>
-          <app-nav-link *ngFor="let link of links" [link]="link"></app-nav-link>
-        </ul>
-      </nav>
-    </div>
-  </mat-sidenav>
-  <mat-sidenav-content class="bg-white p-4">
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="nav-container" [class.is-mobile]="mobileQuery.matches">
+  <mat-toolbar>
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="text-xl font-bold mb-4">PWAP</h1>
+  </mat-toolbar>
+  <mat-sidenav-container class="h-screen" autosize>
+    <mat-sidenav
+      sidenav
+      #snav
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="false"
+      [opened]="!mobileQuery.matches"
+      fixedTopGap="56"
+      class="w-1/4"
+    >
+      <div class="p-4">
+        <nav>
+          <ul>
+            <ng-container *ngFor="let link of filteredLinks$ | async">
+              <app-nav-link [link]="link"></app-nav-link>
+            </ng-container>
+          </ul>
+        </nav>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="p-4 min-h-screen">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

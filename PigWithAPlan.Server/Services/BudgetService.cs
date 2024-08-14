@@ -16,6 +16,7 @@ namespace PigWithAPlan.Server.Services
         BudgetViewDTO? GetBudgetById(int id);
         Task<Budget> CreateBudget(BudgetCreateDTO budget);
         Budget? UpdateBudget(int id, Budget budget);
+        Task<bool> FavoriteBudget(int id);
         void DeleteBudget(int id);
     }
 
@@ -31,11 +32,14 @@ namespace PigWithAPlan.Server.Services
         public IEnumerable<BudgetViewDTO> GetAllBudgets()
         {
             var budgets = _context.Budgets
-                .Select(b => new BudgetViewDTO 
+                .OrderByDescending(b => b.Favorite)
+                .ThenBy(b => b.Name)
+                .Select(b => new BudgetViewDTO
                 {
                     Id = b.Id,
                     Name = b.Name,
                     Color = b.Color,
+                    Favorite = b.Favorite,
                     CreatedAt = b.CreatedAt,
                     UpdatedAt = b.UpdatedAt,
                     UserId = b.User.Id,
@@ -64,11 +68,12 @@ namespace PigWithAPlan.Server.Services
 
         public BudgetViewDTO? GetBudgetById(int id)
         {
-            var budget = _context.Budgets.Select(b => new BudgetViewDTO 
+            var budget = _context.Budgets.Select(b => new BudgetViewDTO
             {
                 Id = b.Id,
                 Name = b.Name,
                 Color = b.Color,
+                Favorite = b.Favorite,
                 CreatedAt = b.CreatedAt,
                 UpdatedAt = b.UpdatedAt,
                 UserName = b.User.Name,
@@ -82,7 +87,7 @@ namespace PigWithAPlan.Server.Services
         {
             var user = await _context.Users.FindAsync(1);
 
-            if (user == null) 
+            if (user == null)
             {
                 throw new Exception("User not found");
             }
@@ -102,6 +107,21 @@ namespace PigWithAPlan.Server.Services
             _context.Budgets.Add(budget);
             await _context.SaveChangesAsync();
             return budget;
+        }
+
+        public async Task<bool> FavoriteBudget(int id)
+        {
+            var budget = await _context.Budgets.FindAsync(id);
+
+            if (budget == null)
+            {
+                throw new Exception("Budget not found");
+            }
+
+            budget.Favorite = !budget.Favorite;
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public Budget? UpdateBudget(int id, Budget budget)

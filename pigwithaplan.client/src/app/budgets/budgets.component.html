@@ -1,26 +1,32 @@
 <div class="p-8">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-lg font-semibold">Your Budgets</h2>
-    <button mat-raised-button color="primary">CREATE</button>
+    <button mat-raised-button color="primary" (click)="showForm()">
+      CREATE
+    </button>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <mat-card *ngFor="let budget of budgets" class="rounded-lg relative">
-      <mat-card-actions align="end">
-        <button mat-icon-button (click)="toggleFavorite(budget)">
+    <mat-card
+      *ngFor="let budget of budgets"
+      class="rounded-lg relative"
+      [ngStyle]="{ 'background-color': budget.color }"
+    >
+      <mat-card-actions class="flex items-center h-8" align="end">
+        <button mat-icon-button (click)="toggleFavorite(budget.id)">
           <mat-icon *ngIf="!budget.favorite">star_outline</mat-icon>
           <mat-icon *ngIf="budget.favorite" color="primary">star</mat-icon>
         </button>
       </mat-card-actions>
 
-      <mat-card-content class="flex flex-col items-center mx-auto mb-4">
+      <mat-card-content class="flex flex-col items-center mx-auto">
         <img
-          src="assets/budget-icon.png"
+          src="assets/svg/dollar-bill.svg"
           alt="Budget Icon"
-          class="w-32 h-32 mb-2 mx-auto"
+          class="w-52 h-30 mx-auto"
         />
         <div class="text-center">
           <h3 class="text-sm font-semibold">{{ budget.name }}</h3>
-          <p class="text-xs text-gray-600">{{ budget.used }}</p>
+          <p class="text-xs text-gray-600">Last used 4 hours ago</p>
         </div>
       </mat-card-content>
     </mat-card>

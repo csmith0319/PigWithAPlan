@@ -9,11 +9,12 @@ import { AboutComponent } from './about/about.component';
 import { BudgetsComponent } from './budgets/budgets.component';
 import { NavLinkComponent } from './_shared/nav/nav-link/nav-link.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './_shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CreateBudgetComponent } from './budgets/create-budget/create-budget.component';
+import { BudgetComponent } from './budgets/budget/budget.component';
+import { DatatableComponent } from './_shared/datatable/datatable.component';
 
 @NgModule({
   declarations: [
@@ -22,16 +23,18 @@ import { AuthModule } from './auth/auth.module';
     AboutComponent,
     BudgetsComponent,
     NavLinkComponent,
+    CreateBudgetComponent,
+    BudgetComponent,
   ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatSidenavModule,
+
     AuthModule,
+    SharedModule,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],

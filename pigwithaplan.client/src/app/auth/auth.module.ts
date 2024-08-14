@@ -9,11 +9,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { RegisterComponent } from './register/register.component';
+import { SharedModule } from '../_shared/shared.module';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
   imports: [
     CommonModule,
+    SharedModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,

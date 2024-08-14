@@ -1,0 +1,88 @@
+<div class="flex flex-col p-5">
+  <div class="flex flex-col">
+    <h1>June 2024</h1>
+    <h2>$2,600 left to budget</h2>
+    <div class="header-actions mb-4">
+      <button mat-button color="primary" (click)="addCategoryGroup()">
+        Add Category Group
+      </button>
+      <button mat-button color="primary">Select All</button>
+      <button mat-button color="primary" (click)="accordion.openAll()">
+        Expand All
+      </button>
+      <button mat-button color="primary" (click)="accordion.closeAll()">
+        Collapse All
+      </button>
+    </div>
+  </div>
+
+  <div class="flex space-around">
+    <!-- CATEGORY GROUPS -->
+    <div class="w-1/2 h-full">
+      <!-- NEW CATEGORY GROUP -->
+      <ng-container *ngIf="isNewCategoryGroup">
+        <mat-card class="m-4">
+          <mat-card-header>
+            <form [formGroup]="formCategoryGroup">
+              <mat-form-field class="w-full" appearance="fill">
+                <mat-label>Category Group Name</mat-label>
+                <input matInput [formControl]="categoryGroupName" />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="createCategoryGroup()"
+                >
+                  <span class="material-symbols-outlined"> add </span>
+                </button>
+              </mat-form-field>
+            </form>
+          </mat-card-header>
+        </mat-card>
+      </ng-container>
+
+      <!-- LIST OF CATEGORY GROUPS -->
+      <mat-accordion
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+        class="category-group-list"
+        multi
+      >
+        @for (categoryGroup of categoryGroups; track categoryGroup) {
+        <mat-expansion-panel cdkDrag class="m-4" expanded>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="text-white">
+              {{ categoryGroup.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="h-full">
+            <app-datatable
+              [data]="categoryAData"
+              [columns]="dtCategoryColumns"
+            ></app-datatable>
+            <button mat-button color="primary">Add Item</button>
+          </div>
+        </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="w-1/2 h-full">
+      <mat-card class="m-4">
+        <mat-tab-group>
+          <mat-tab label="New">Content</mat-tab>
+          <mat-tab label="Tracked">
+            <app-datatable
+              [data]="transactionsData"
+              [columns]="dtTransactionsColumns"
+            ></app-datatable>
+          </mat-tab>
+          <mat-tab label="Accounts">Content</mat-tab>
+        </mat-tab-group>
+        <button mat-button mat-raised-button color="primary">
+          View All Transactions
+        </button>
+      </mat-card>
+    </div>
+  </div>
+</div>
