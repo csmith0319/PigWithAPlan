@@ -19,21 +19,25 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@Angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 
-import {
-  CdkDragDrop,
-  CdkDropList,
-  CdkDrag,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
+import { SidebarComponent } from './nav/sidebar/sidebar.component';
+import { NavLinkComponent } from './nav/nav-link/nav-link.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [ToastComponent, DatatableComponent],
+  declarations: [
+    ToastComponent,
+    DatatableComponent,
+    SidebarComponent,
+    NavLinkComponent,
+  ],
   imports: [
     CommonModule,
+    RouterModule,
+
     MatSnackBarModule,
     MatButtonModule,
     MatIconModule,
@@ -49,35 +53,16 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTabsModule,
     MatExpansionModule,
     MatDialogModule,
+
     A11yModule,
     CdkDropList,
     CdkDrag,
   ],
   exports: [
-    FormsModule,
-    ReactiveFormsModule,
     ToastComponent,
-    MatSnackBarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatTableModule,
-    MatTabsModule,
-    MatExpansionModule,
-    MatDialogModule,
     DatatableComponent,
-    CdkDropList,
-    CdkDrag,
+    SidebarComponent,
+    NavLinkComponent,
   ],
   providers: [
     {

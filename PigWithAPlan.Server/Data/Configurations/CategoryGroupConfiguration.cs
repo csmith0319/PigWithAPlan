@@ -14,6 +14,11 @@ public class CategoryGroupConfiguration : IEntityTypeConfiguration<CategoryGroup
                      .IsRequired()
                      .HasMaxLength(100);
 
+              builder.HasMany(c => c.Category)
+                     .WithOne(c => c.CategoryGroup)
+                     .HasForeignKey(c => c.CategoryGroupId)
+                     .OnDelete(DeleteBehavior.Cascade);
+
               builder.Property(c => c.CreatedAt)
                      .HasDefaultValueSql("CURRENT_TIMESTAMP");
 

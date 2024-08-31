@@ -41,7 +41,7 @@ namespace PigWithAPlan.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBudget([FromBody] BudgetCreateDTO budget)
+        public async Task<IActionResult> CreateBudget([FromBody] BudgetCreateViewModel budget)
         {
             if (!ModelState.IsValid)
             {

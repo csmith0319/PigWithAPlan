@@ -4,7 +4,7 @@
       <th mat-header-cell *matHeaderCellDef class="w-20">
         <mat-checkbox
           (change)="$event ? masterToggle() : null"
-          [checked]="isAllSelected()"
+          [checked]="data.length > 0 && isAllSelected()"
           [indeterminate]="selection.hasValue() && !isAllSelected()"
         ></mat-checkbox>
       </th>

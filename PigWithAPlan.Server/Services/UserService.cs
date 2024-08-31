@@ -1,4 +1,3 @@
-using PigWithAPlan.Server.Dtos.User;
 using PigWithAPlan.Server.Mappers;
 using PigWithAPlan.Server.Models;
 
@@ -6,7 +5,7 @@ public interface IUserService
 {
     Task<bool> RegisterAsync(User user);
     Task<bool> ValidateUser(User user);
-    Task<List<UserDTO>> GetAllAsync();
+    Task<List<UserViewModel>> GetAllAsync();
 }
 
 public class UserService : IUserService
@@ -58,12 +57,12 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<List<UserDTO>> GetAllAsync()
+    public async Task<List<UserViewModel>> GetAllAsync()
     {
-        var users = await _userRepository.GetAllAsync();
+        var _users = await _userRepository.GetAllAsync();
 
-        var usersDto = users.Select(u => u.ToUserDTO()).ToList();
+        var users = _users.Select(u => u.ToUserViewModel()).ToList();
 
-        return usersDto;
+        return users;
     }
 }

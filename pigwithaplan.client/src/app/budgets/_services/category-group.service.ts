@@ -1,9 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { IBudget } from '../_models/budget';
-import { ICategoryGroup } from '../_models/category-group';
+import { environment } from '../../../environments/environment';
+import { ICategoryGroup } from '../../_models/category-group';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +17,18 @@ export class CategoryGroupService implements OnInit {
 
   ngOnInit(): void {}
 
-  getAll(): Observable<IBudget[]> {
-    return this.http.get<IBudget[]>(this.apiUrl);
+  getAll(id: number): Observable<ICategoryGroup[]> {
+    const apiKey: string = 'budgetId';
+    const httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set(apiKey, id.toString());
+
+    return this.http.get<ICategoryGroup[]>(this.apiUrl, {
+      headers: httpHeaders,
+      params: httpParams,
+    });
   }
 
   add(categoryGroup: ICategoryGroup): Observable<any> {

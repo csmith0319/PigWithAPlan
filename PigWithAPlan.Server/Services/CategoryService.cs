@@ -7,8 +7,8 @@ namespace PigWithAPlan.Server.Services
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<Category>> GetAllAsync();
-        Task<Category?> GetByIdAsync(int id);
+        Task<IEnumerable<CategoryViewModel>> GetAllAsync(int groupId);
+        Task<CategoryViewModel?> GetByIdAsync(int id);
         Task<Category> AddAsync(Category category);
         Task<Category> UpdateAsync(Category category);
         Task<bool> DeleteAsync(int id);
@@ -23,14 +23,30 @@ namespace PigWithAPlan.Server.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<CategoryViewModel>> GetAllAsync(int groupId)
         {
-            return await _repository.GetAllAsync();
+            var _categories = await _repository.GetAllAsync(groupId);
+
+            return _categories.Select(c => new CategoryViewModel()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                CategoryGroupId = c.CategoryGroupId,
+            }).ToList();
         }
 
-        public async Task<Category?> GetByIdAsync(int id)
+        public async Task<CategoryViewModel?> GetByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            var _category = await _repository.GetByIdAsync(id);
+
+            if (_category == null) return null;
+
+            return new CategoryViewModel()
+            {
+                Id = _category.Id,
+                Name = _category.Name,
+                CategoryGroupId = _category.CategoryGroupId
+            };
         }
 
         public async Task<Category> AddAsync(Category category)

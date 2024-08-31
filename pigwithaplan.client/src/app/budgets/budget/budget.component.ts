@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { DTColumn } from '../../_shared/_models/DTColumn';
 import { FormBuilder, Validators } from '@angular/forms';
-import { CategoryGroupService } from '../../_services/category-group.service';
-import { startWith, Subscription, switchMap } from 'rxjs';
+import { CategoryGroupService } from '../_services/category-group.service';
+import { combineLatest, of, startWith, Subscription, switchMap } from 'rxjs';
 import { ICategoryGroup } from '../../_models/category-group';
-import { BudgetService } from '../../_services/budget.service';
 import { ToastService } from '../../_shared/toast/toast.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatAccordion } from '@angular/material/expansion';
+import { BudgetService } from '../_services/budget.service';
+import { ActivatedRoute } from '@angular/router';
+import { CategoryService } from '../_services/category.service';
+import { ICategory } from '../_models/Category';
 
 @Component({
   selector: 'app-budget',
@@ -18,10 +20,13 @@ import { MatAccordion } from '@angular/material/expansion';
 export class BudgetComponent implements OnInit, OnDestroy {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
+  budgetId: number = 0;
+
   constructor(
     private formBuilder: FormBuilder,
     private categoryGroupService: CategoryGroupService,
     private budgetService: BudgetService,
+    private route: ActivatedRoute,
     private toastService: ToastService
   ) {}
 
@@ -37,17 +42,30 @@ export class BudgetComponent implements OnInit, OnDestroy {
 
   Load(): void {
     this.subscription.add(
-      this.categoryGroupService.CategoryGroupData_changed.pipe(
-        startWith(0),
-        switchMap(() => {
-          return this.categoryGroupService.getAll();
+      combineLatest([
+        this.route.params,
+        this.categoryGroupService.CategoryGroupData_changed.pipe(startWith(0)),
+        // this.categoryService.CategoryData_changed.pipe(startWith(0))
+      ])
+        .pipe(
+          switchMap(([params, categoryGroups]) => {
+            this.budgetId = Number(params['id']);
+
+            return this.budgetId > 0
+              ? this.categoryGroupService.getAll(this.budgetId)
+              : of([]);
+          })
+        )
+        .subscribe({
+          next: (categoryGroups) => {
+            this.categoryGroups = categoryGroups;
+
+            this.categoryGroups.forEach((x) => {
+              this.populateDatatableRows(x.categories ?? []);
+            });
+          },
+          error: (err) => {},
         })
-      ).subscribe({
-        next: (categoryGroups) => {
-          this.categoryGroups = categoryGroups;
-        },
-        error: (err) => {},
-      })
     );
   }
 
@@ -67,28 +85,15 @@ export class BudgetComponent implements OnInit, OnDestroy {
 
   categoryGroups: ICategoryGroup[] = [];
 
-  categoryAData = [
-    { Item: 'Budget item A', Planned: '$1,300', Remaining: '$800' },
-    { Item: 'Budget item B', Planned: '$500', Remaining: '$0' },
-    { Item: 'Budget item C', Planned: '$0', Remaining: '-$100' },
-    { Item: 'Budget item C', Planned: '$0', Remaining: '-$100' },
-    { Item: 'Budget item C', Planned: '$0', Remaining: '-$100' },
-  ];
-
-  transactionsData = [
-    { Date: 'June', Transaction: 'Transaction 1', Amount: '-$600' },
-    { Date: 'June', Transaction: 'Transaction 2', Amount: '-$100' },
-    { Date: 'June', Transaction: 'Transaction 1', Amount: '$100' },
-    { Date: 'May', Transaction: 'Transaction 1', Amount: '-$600' },
-    { Date: 'May', Transaction: 'Transaction 2', Amount: '-$100' },
-  ];
+  dtCategoryRows: any[] = [];
+  dtTransactionRows: any[] = [];
 
   getCategoryGroupDetails(_newCategoryGroup: ICategoryGroup) {
     _newCategoryGroup.name = this.categoryGroupName.value;
   }
 
   createCategoryGroup() {
-    let _newCategoryGroup: ICategoryGroup = { id: 0 };
+    let _newCategoryGroup: ICategoryGroup = { id: 0, budgetId: this.budgetId };
     this.getCategoryGroupDetails(_newCategoryGroup);
 
     if (this.formCategoryGroup.valid) {
@@ -118,6 +123,22 @@ export class BudgetComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
+  }
+
+  populateDatatableRows(data: ICategory[]): void {
+    data.forEach((x) => {
+      const categoryGroupId: number = Number(x.categoryGroupId);
+
+      if (!isNaN(categoryGroupId)) {
+        if (this.dtCategoryRows[categoryGroupId] == undefined)
+          this.dtCategoryRows[categoryGroupId] = [];
+        this.dtCategoryRows[categoryGroupId].push({
+          Item: x.name,
+          Planned: '$0',
+          Remaining: '$0',
+        });
+      }
+    });
   }
 
   formCategoryGroup = this.formBuilder.group({

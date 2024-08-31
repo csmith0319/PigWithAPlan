@@ -18,9 +18,9 @@ namespace PigWithAPlan.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Category>>> GetAll(int groupId)
         {
-            var categories = await _service.GetAllAsync();
+            var categories = await _service.GetAllAsync(groupId);
             return Ok(categories);
         }
 

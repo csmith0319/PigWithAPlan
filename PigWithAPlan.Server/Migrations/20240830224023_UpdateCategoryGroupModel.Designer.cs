@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PigWithAPlan.Server.Data;
@@ -11,9 +12,11 @@ using PigWithAPlan.Server.Data;
 namespace PigWithAPlan.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240830224023_UpdateCategoryGroupModel")]
+    partial class UpdateCategoryGroupModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,7 +282,7 @@ namespace PigWithAPlan.Server.Migrations
             modelBuilder.Entity("PigWithAPlan.Server.Models.Category", b =>
                 {
                     b.HasOne("PigWithAPlan.Server.Models.CategoryGroup", "CategoryGroup")
-                        .WithMany("Category")
+                        .WithMany()
                         .HasForeignKey("CategoryGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -315,11 +318,6 @@ namespace PigWithAPlan.Server.Migrations
                     b.Navigation("Budget");
 
                     b.Navigation("Payee");
-                });
-
-            modelBuilder.Entity("PigWithAPlan.Server.Models.CategoryGroup", b =>
-                {
-                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

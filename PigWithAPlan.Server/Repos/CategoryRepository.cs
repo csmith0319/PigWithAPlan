@@ -9,7 +9,7 @@ namespace PigWithAPlan.Server.Repositories
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetAllAsync();
+        Task<IEnumerable<Category>> GetAllAsync(int groupId);
         Task<Category?> GetByIdAsync(int id);
         Task<Category> AddAsync(Category category);
         Task<Category> UpdateAsync(Category category);
@@ -25,9 +25,9 @@ namespace PigWithAPlan.Server.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<Category>> GetAllAsync(int groupId)
         {
-            return await _context.Categories.Include(c => c.CategoryGroup).ToListAsync();
+            return await _context.Categories.Where(c => c.CategoryGroupId == groupId).Include(c => c.CategoryGroup).ToListAsync();
         }
 
         public async Task<Category?> GetByIdAsync(int id)

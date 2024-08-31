@@ -11,10 +11,10 @@ namespace PigWithAPlan.Server.Services
 {
     public interface IBudgetService
     {
-        IEnumerable<BudgetViewDTO> GetAllBudgets();
-        IEnumerable<BudgetTransactionViewDTO> GetAllTransactions();
-        BudgetViewDTO? GetBudgetById(int id);
-        Task<Budget> CreateBudget(BudgetCreateDTO budget);
+        IEnumerable<BudgetViewModel> GetAllBudgets();
+        IEnumerable<BudgetTransactionViewModel> GetAllTransactions();
+        Task<BudgetViewModel?> GetBudgetById(int id);
+        Task<Budget> CreateBudget(BudgetCreateViewModel budget);
         Budget? UpdateBudget(int id, Budget budget);
         Task<bool> FavoriteBudget(int id);
         void DeleteBudget(int id);
@@ -29,12 +29,13 @@ namespace PigWithAPlan.Server.Services
             _context = context;
         }
 
-        public IEnumerable<BudgetViewDTO> GetAllBudgets()
+        public IEnumerable<BudgetViewModel> GetAllBudgets()
         {
             var budgets = _context.Budgets
                 .OrderByDescending(b => b.Favorite)
-                .ThenBy(b => b.Name)
-                .Select(b => new BudgetViewDTO
+                .ThenByDescending(b => b.Favorite ? b.UpdatedAt : DateTime.MinValue)
+                .ThenByDescending(b => !b.Favorite ? b.UpdatedAt : DateTime.MinValue)
+                .Select(b => new BudgetViewModel
                 {
                     Id = b.Id,
                     Name = b.Name,
@@ -49,11 +50,11 @@ namespace PigWithAPlan.Server.Services
             return budgets;
         }
 
-        public IEnumerable<BudgetTransactionViewDTO> GetAllTransactions()
+        public IEnumerable<BudgetTransactionViewModel> GetAllTransactions()
         {
             var transactions = _context.Transactions
                                         .Include(t => t.Payee)
-                                        .Select(t => new BudgetTransactionViewDTO
+                                        .Select(t => new BudgetTransactionViewModel
                                         {
                                             TransactionId = t.Id,
                                             CreatedAt = t.CreatedAt,
@@ -66,9 +67,9 @@ namespace PigWithAPlan.Server.Services
             return transactions;
         }
 
-        public BudgetViewDTO? GetBudgetById(int id)
+        public async Task<BudgetViewModel?> GetBudgetById(int id)
         {
-            var budget = _context.Budgets.Select(b => new BudgetViewDTO
+            var budget = await _context.Budgets.Select(b => new BudgetViewModel
             {
                 Id = b.Id,
                 Name = b.Name,
@@ -78,12 +79,12 @@ namespace PigWithAPlan.Server.Services
                 UpdatedAt = b.UpdatedAt,
                 UserName = b.User.Name,
                 UserId = b.User.Id
-            }).FirstOrDefault(b => b.Id == id);
+            }).FirstOrDefaultAsync(b => b.Id == id);
 
             return budget ?? null;
         }
 
-        public async Task<Budget> CreateBudget(BudgetCreateDTO budgetDTO)
+        public async Task<Budget> CreateBudget(BudgetCreateViewModel viewModel)
         {
             var user = await _context.Users.FindAsync(1);
 
@@ -94,8 +95,8 @@ namespace PigWithAPlan.Server.Services
 
             var budget = new Budget
             {
-                Name = budgetDTO.Name,
-                Color = budgetDTO.Color,
+                Name = viewModel.Name,
+                Color = viewModel.Color,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 CreatedBy = 1,
@@ -119,8 +120,9 @@ namespace PigWithAPlan.Server.Services
             }
 
             budget.Favorite = !budget.Favorite;
-            await _context.SaveChangesAsync();
+            budget.UpdatedAt = DateTime.UtcNow;
 
+            await _context.SaveChangesAsync();
             return true;
         }
 

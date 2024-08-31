@@ -11,16 +11,18 @@ namespace PigWithAPlan.Server.Controllers
     public class CategoryGroupController : ControllerBase
     {
         private readonly ICategoryGroupService _service;
+        private readonly IBudgetService _budgetService;
 
-        public CategoryGroupController(ICategoryGroupService service)
+        public CategoryGroupController(ICategoryGroupService service, IBudgetService budgetService)
         {
             _service = service;
+            _budgetService = budgetService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryGroup>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CategoryGroupViewModel>>> GetAll(int budgetId)
         {
-            var categoryGroups = await _service.GetAllAsync();
+            var categoryGroups = await _service.GetAllAsync(budgetId);
             return Ok(categoryGroups);
         }
 
@@ -37,21 +39,40 @@ namespace PigWithAPlan.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryGroup>> Create(CategoryGroup categoryGroup)
+        public async Task<ActionResult<CategoryGroup>> Create(CategoryGroupCreateViewModel viewModel)
         {
-            var createdCategoryGroup = await _service.AddAsync(categoryGroup);
-            return CreatedAtAction(nameof(GetById), new { id = createdCategoryGroup.Id }, createdCategoryGroup);
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                int budgetId = viewModel.BudgetId;
+
+                if (budgetId == 0)
+                {
+                    return BadRequest(new { success = false, message = "Budget ID does not exist." });
+                }
+
+                var createdCategoryGroup = await _service.AddAsync(viewModel);
+                return CreatedAtAction(nameof(GetById), new { id = createdCategoryGroup.Id }, createdCategoryGroup);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = "Failed to create category group." });
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CategoryGroup categoryGroup)
+        public async Task<IActionResult> Update(int id, CategoryGroupCreateViewModel viewModel)
         {
-            if (id != categoryGroup.Id)
+            if (id != viewModel.Id)
             {
                 return BadRequest();
             }
 
-            await _service.UpdateAsync(categoryGroup);
+            await _service.UpdateAsync(viewModel);
             return NoContent();
         }
 

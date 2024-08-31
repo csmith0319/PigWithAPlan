@@ -1,4 +1,4 @@
-public class TransactionDetailDTO
+public class TransactionDetailViewModel
 {
     public int TransactionId { get; set; }
     public DateTime CreatedAt { get; set; }

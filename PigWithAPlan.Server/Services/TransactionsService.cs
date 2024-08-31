@@ -9,8 +9,8 @@ namespace PigWithAPlan.Server.Services
 {
     public interface ITransactionService
     {
-        IEnumerable<TransactionDetailDTO> GetAllTransactions();
-        TransactionDetailDTO? GetTransactionById(int id);
+        IEnumerable<TransactionDetailViewModel> GetAllTransactions();
+        TransactionDetailViewModel? GetTransactionById(int id);
         Transaction CreateTransaction(Transaction transaction);
         Transaction? UpdateTransaction(int id, Transaction transaction);
         void DeleteTransaction(int id);
@@ -25,12 +25,12 @@ namespace PigWithAPlan.Server.Services
             _context = context;
         }
 
-        public IEnumerable<TransactionDetailDTO> GetAllTransactions()
+        public IEnumerable<TransactionDetailViewModel> GetAllTransactions()
         {
             var transactions = _context.Transactions
                                         .Include(t => t.Payee)
                                         .Include(t => t.Budget)
-                                        .Select(t => new TransactionDetailDTO
+                                        .Select(t => new TransactionDetailViewModel
                                         {
                                             TransactionId = t.Id,
                                             CreatedAt = t.CreatedAt,
@@ -46,12 +46,12 @@ namespace PigWithAPlan.Server.Services
             return transactions;
         }
 
-        public TransactionDetailDTO? GetTransactionById(int id)
+        public TransactionDetailViewModel? GetTransactionById(int id)
         {
             var transaction = _context.Transactions
                                         .Include(t => t.Payee)
                                         .Include(t => t.Budget)
-                                        .Select(t => new TransactionDetailDTO
+                                        .Select(t => new TransactionDetailViewModel
                                         {
                                             TransactionId = t.Id,
                                             CreatedAt = t.CreatedAt,

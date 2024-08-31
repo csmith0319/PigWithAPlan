@@ -1,18 +1,19 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { BudgetService } from '../_services/budget.service';
-import { ToastService } from '../_shared/toast/toast.service';
-import { FormBuilder } from '@angular/forms';
-import { IBudget } from '../_models/budget';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { startWith, Subscription, switchMap } from 'rxjs';
-import { CreateBudgetComponent } from './create-budget/create-budget.component';
+import { CreateBudgetComponent } from '../create-budget/create-budget.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder } from '@angular/forms';
+import { ToastService } from 'app/_shared/toast/toast.service';
+import { BudgetService } from '../_services/budget.service';
+import { IBudget } from 'app/_models/budget';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-budgets',
-  templateUrl: './budgets.component.html',
-  styleUrls: ['./budgets.component.scss'],
+  selector: 'app-budget-list',
+  templateUrl: './budget-list.component.html',
+  styleUrls: ['./budget-list.component.css'],
 })
-export class BudgetsComponent implements OnInit, OnDestroy {
+export class BudgetListComponent implements OnInit {
   isCreatingBudget = false;
   budgets: IBudget[] = [];
 
@@ -23,7 +24,8 @@ export class BudgetsComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,9 +36,7 @@ export class BudgetsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(CreateBudgetComponent);
 
     dialogRef.afterClosed().subscribe({
-      next: (result) => {
-        console.log('Result:', result);
-      },
+      next: (result) => {},
       error: () => {},
     });
   }
@@ -73,5 +73,9 @@ export class BudgetsComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.budgetService.favorite(id).subscribe((response) => {})
     );
+  }
+
+  navigateToBudget(id: number): void {
+    this.router.navigate([`/budgets/${id}`]);
   }
 }

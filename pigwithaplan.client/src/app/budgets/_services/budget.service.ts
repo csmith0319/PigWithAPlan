@@ -1,8 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { IBudget } from '../_models/budget';
+import { environment } from 'environments/environment';
+import { IBudget } from 'app/_models/budget';
 
 @Injectable({
   providedIn: 'root',
@@ -53,8 +53,6 @@ export class BudgetService implements OnInit {
     });
     let httpParams = new HttpParams();
     httpParams = httpParams.set('id', id.toString());
-
-    console.log(httpParams.toString());
 
     return this.http
       .post(this.apiUrl + this.apiFavorite, null, {

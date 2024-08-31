@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PigWithAPlan.Server.Mappers;
 using PigWithAPlan.Server.Models;
 using PigWithAPlan.Server.Repositories;
 
@@ -7,10 +8,10 @@ namespace PigWithAPlan.Server.Services
 {
     public interface ICategoryGroupService
     {
-        Task<IEnumerable<CategoryGroup>> GetAllAsync();
-        Task<CategoryGroup> GetByIdAsync(int id);
-        Task<CategoryGroup> AddAsync(CategoryGroup categoryGroup);
-        Task<CategoryGroup> UpdateAsync(CategoryGroup categoryGroup);
+        Task<IEnumerable<CategoryGroupViewModel>> GetAllAsync(int budgetId);
+        Task<CategoryGroup?> GetByIdAsync(int id);
+        Task<CategoryGroup> AddAsync(CategoryGroupCreateViewModel categoryGroup);
+        Task<CategoryGroup> UpdateAsync(CategoryGroupCreateViewModel categoryGroup);
         Task<bool> DeleteAsync(int id);
     }
 
@@ -23,9 +24,22 @@ namespace PigWithAPlan.Server.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<CategoryGroup>> GetAllAsync()
+        public async Task<IEnumerable<CategoryGroupViewModel>> GetAllAsync(int budgetId)
         {
-            return await _repository.GetAllAsync();
+            var _categoryGroups = await _repository.GetAllAsync(budgetId);
+
+
+            return _categoryGroups.Select(c => new CategoryGroupViewModel()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Categories = c.Category?.Select(x => new CategoryViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    CategoryGroupId = x.CategoryGroupId
+                }).ToList()
+            }).ToList();
         }
 
         public async Task<CategoryGroup?> GetByIdAsync(int id)
@@ -33,13 +47,25 @@ namespace PigWithAPlan.Server.Services
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<CategoryGroup> AddAsync(CategoryGroup categoryGroup)
+        public async Task<CategoryGroup> AddAsync(CategoryGroupCreateViewModel categoryGroupViewModel)
         {
+            var categoryGroup = new CategoryGroup()
+            {
+                Name = categoryGroupViewModel.Name,
+                BudgetId = categoryGroupViewModel.BudgetId,
+            };
+
             return await _repository.AddAsync(categoryGroup);
         }
 
-        public async Task<CategoryGroup> UpdateAsync(CategoryGroup categoryGroup)
+        public async Task<CategoryGroup> UpdateAsync(CategoryGroupCreateViewModel categoryGroupViewModel)
         {
+            var categoryGroup = new CategoryGroup()
+            {
+                Name = categoryGroupViewModel.Name,
+                BudgetId = categoryGroupViewModel.BudgetId,
+            };
+
             return await _repository.UpdateAsync(categoryGroup);
         }
 
